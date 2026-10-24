@@ -1,0 +1,21 @@
+# Credenciais e configurações locais
+.env
+.env.*
+!.env.example
+*.local
+
+# Java e Maven
+target/
+*.class
+
+# React
+node_modules/
+dist/
+
+# Editores
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
