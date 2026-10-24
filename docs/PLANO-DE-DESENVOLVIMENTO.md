@@ -4,20 +4,21 @@ Este documento registra o estado do projeto e organiza a evolução em entregas 
 
 ## Onde paramos
 
-O histórico Git mostra três marcos: configuração inicial do projeto (`a81d3a6`), README inicial (`8773f59`) e a aula/commit de controller (`fe9fb79`, `Aula sobre controller`). O branch atual `main` está um commit à frente de `origin/main`.
+O projeto está sincronizado com `origin/main`. As pastas `Ensinamentos/` e `prints/` foram removidas. O usuário prefere conduzir o trabalho por interfaces gráficas e aprender em passos curtos, com os arquivos alterados sempre identificados para abertura no VS Code.
 
 | Área | Estado observado |
 |---|---|
 | Projeto Java | Maven com Spring Boot e Java 21 configurado no `pom.xml`. |
 | Inicialização | `ComercialApiApplication` inicia o Spring Boot. |
 | API | `HelloController` expõe `GET /hello`; o usuário iniciou a aplicação e confirmou que a rota respondeu. |
-| Produto | A entidade agora mapeia `portfolio_web.produtos` e as colunas `id`, `categoria_id`, `sku`, `nome`, `descricao`, `preco`, `estoque_atual` e `ativo`, conforme `prints/Dados da tabela.png`. `categoria_id` está como `Long` simples por enquanto; operações CRUD ainda não existem. |
+| Banco | O banco local contém `categorias`, `clientes`, `produtos`, `pedidos`, `itens_pedido` e `movimentacoes_estoque`, com PKs, FKs, unicidades e checks documentados pelo DDL enviado pelo usuário. Flyway e o módulo PostgreSQL foram adicionados ao Maven; ainda faltam os scripts e a configuração de baseline. |
+| Produto | A entidade mapeia as colunas principais de `portfolio_web.produtos`, mas ainda não expressa todas as constraints; `categoria_id` segue como `Long`. CRUD ainda não existe. |
 | Banco | PostgreSQL está configurado por `PG_HOST`, `PG_PORT`, `PG_USER` e `PG_PASSWORD`; o banco esperado é `db_gestao_comercial`. |
 | Frontend | React é uma intenção no README, ainda não há aplicação frontend. |
 | Produto funcional | Clientes, estoque, pedidos, vendas, dashboard e autenticação ainda não foram implementados. |
 | Publicação | Não há evidência nos arquivos revisados de deploy, imagens, licença ou documentação de API. |
 
-O backend foi executado com sucesso pelo usuário, conectou ao PostgreSQL e a rota `/hello` respondeu. A entidade foi alinhada à tabela local; a próxima etapa é validar a inicialização após a alteração e registrar a estrutura de forma versionada antes de implementar persistência.
+O usuário confirmou que a aplicação iniciou e validou o mapeamento. Também compartilhou o DDL das seis tabelas. Flyway está no Maven, mas a aplicação não deve ser iniciada até os scripts e a estratégia de baseline estarem preparados e revisados, pois o Spring Boot executa migrations durante a inicialização.
 
 ## Ordem recomendada
 
@@ -26,15 +27,15 @@ O backend foi executado com sucesso pelo usuário, conectou ao PostgreSQL e a ro
 1. Instale/valide JDK 21 e PostgreSQL.
 2. A chave primária de `Produto` já foi adicionada. Depois de validar a inicialização, defina os campos comerciais e as validações iniciais.
 3. Crie o banco `db_gestao_comercial` e o schema `portfolio_web` com seu usuário local.
-4. Defina `PG_HOST`, `PG_PORT`, `PG_USER` e `PG_PASSWORD` no terminal da sessão.
-5. Inicie o backend de `comercial-api` com `./mvnw spring-boot:run` (Windows: `./mvnw.cmd spring-boot:run`).
+4. Defina `PG_HOST`, `PG_PORT`, `PG_USER` e `PG_PASSWORD` nas variáveis de usuário do Windows, pela janela **Variáveis de Ambiente**; reabra o VS Code depois.
+5. Inicie a classe `ComercialApiApplication` pela ação **Run Java** do VS Code ou pelo Spring Boot Dashboard.
 6. Acesse `http://localhost:8080/hello` e confira a resposta.
 
-**Concluída quando:** a API inicia sem erro de mapeamento ou conexão e a rota responde localmente. Não salve senhas no Git.
+**Concluída quando:** a API inicia sem erro de mapeamento ou conexão e a rota responde localmente. Não salve senhas no Git. O usuário confirmou esta etapa concluída.
 
 ### Etapa 2 — Fechar o primeiro recurso: produtos
 
-1. Defina os campos mínimos do produto (por exemplo, identificador, nome, descrição, preço, quantidade em estoque e situação) e as regras de validação.
+1. Alinhe o mapeamento da entidade Produto às regras confirmadas no DDL e defina as validações da API.
 2. Complete a entidade JPA com chave primária e tipos adequados; decida como o schema e a tabela serão criados/atualizados. Para evolução consistente, prefira migrações versionadas em vez de depender de alterações automáticas no banco.
 3. Crie um repositório Spring Data JPA.
 4. Crie endpoints REST para criar e listar produtos; em seguida, consultar por id, atualizar e remover.
@@ -83,7 +84,7 @@ Implemente clientes, pedidos e itens de pedido. Depois trate as regras de estoqu
 - [x] Alinhar `Produto` às colunas reais: incluir `sku` e `categoria_id`, mapear `estoque_atual` e ajustar os tamanhos/precisão.
 - [ ] Definir validações de Produto e registrar migration para o schema/tabela.
 - [x] Adicionar chave primária à entidade `Produto`.
-- [x] Validar a inicialização e conexão local com PostgreSQL.
+- [x] Validar a inicialização e conexão local com PostgreSQL após o alinhamento atual da entidade (confirmado pelo usuário).
 - [ ] Implementar repositório e endpoints de Produto.
 - [ ] Documentar exemplos e configurar testes do recurso.
 - [ ] Atualizar o README conforme a entrega real.

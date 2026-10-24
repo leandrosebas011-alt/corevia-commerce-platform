@@ -2,12 +2,13 @@
 
 Projeto de portfólio para construir, passo a passo, uma plataforma web de gestão comercial. A proposta é evoluir de uma API Java inicial para uma aplicação full stack com cadastro de produtos e clientes, estoque, pedidos e indicadores.
 
-> **Estado atual:** início do backend. A aplicação Spring Boot iniciou localmente, conectou ao PostgreSQL e `GET /hello` respondeu corretamente antes do alinhamento recente da entidade. Agora o Hibernate está configurado para validar o mapeamento ao iniciar; falta reiniciar para conferir. A tabela ainda precisa ser versionada no projeto e não há endpoints comerciais.
+> **Estado atual:** início do backend. Após alinhar a entidade `Produto`, o usuário confirmou que a aplicação iniciou corretamente com a validação do mapeamento (`ddl-auto=validate`) e que a conexão ao PostgreSQL funcionou. A tabela ainda precisa ser versionada no projeto e não há endpoints comerciais.
 
 ## Tecnologias previstas
 
 - **Backend:** Java 21, Spring Boot, Spring Web MVC, Spring Data JPA, Bean Validation e Maven.
 - **Banco de dados:** PostgreSQL.
+- **Migrações do banco:** Flyway (script inicial e baseline ainda em preparação).
 - **Frontend planejado:** React, JavaScript, HTML e CSS.
 - **Versionamento:** Git e GitHub.
 
@@ -16,7 +17,8 @@ Projeto de portfólio para construir, passo a passo, uma plataforma web de gest�
 - Projeto Maven em `comercial-api/` com Spring Boot.
 - Classe principal `ComercialApiApplication`.
 - Endpoint de demonstração `GET /hello`.
-- Entidade JPA `Produto` mapeia `id`, `categoria_id`, `sku`, `nome`, `descricao`, `preco`, `estoque_atual` e `ativo`, conforme a tabela local registrada em [`prints/Dados da tabela.png`](prints/Dados%20da%20tabela.png).
+- Entidade JPA `Produto` mapeia as colunas `id`, `categoria_id`, `sku`, `nome`, `descricao`, `preco`, `estoque_atual` e `ativo` da tabela existente `portfolio_web.produtos`.
+- O banco local já possui tabelas para categorias, clientes, produtos, pedidos, itens de pedido e movimentações de estoque; as operações comerciais pela API ainda não foram implementadas.
 - Configuração para PostgreSQL por variáveis de ambiente.
 - Teste de contexto gerado pelo Spring Boot, ainda sem validação do fluxo comercial.
 
@@ -37,23 +39,17 @@ Projeto de portfólio para construir, passo a passo, uma plataforma web de gest�
 - PostgreSQL instalado e em execução.
 - Um banco chamado `db_gestao_comercial` e um schema `portfolio_web` acessíveis pelo usuário configurado.
 
-O arquivo `application.properties` exige `PG_HOST`, `PG_PORT`, `PG_USER` e `PG_PASSWORD`. A aplicação também precisa conseguir conectar ao PostgreSQL ao iniciar, pois o Spring configura JPA e datasource.
+O arquivo `application.properties` lê as variáveis `PG_HOST`, `PG_PORT`, `PG_USER` e `PG_PASSWORD`. Para configurá-las pelas telas do Windows:
 
-No PowerShell, configure as variáveis apenas para a sessão atual (substitua os valores pelos seus):
+1. Abra o menu Iniciar e pesquise por **Editar as variáveis de ambiente do sistema**.
+2. Na janela **Propriedades do Sistema**, clique em **Variáveis de Ambiente...**.
+3. Na seção superior **Variáveis de usuário**, clique em **Novo...** para cada variável. Se ela já existir, selecione-a e clique em **Editar...**.
+4. Use os valores da sua instalação local: `PG_HOST` = `localhost`, `PG_PORT` = `5432`, `PG_USER` = seu usuário PostgreSQL e `PG_PASSWORD` = a senha desse usuário.
+5. Confirme as janelas e feche/reabra o VS Code para que os novos processos recebam as variáveis.
 
-```powershell
-$env:PG_HOST = "localhost"
-$env:PG_PORT = "5432"
-$env:PG_USER = "seu_usuario"
-$env:PG_PASSWORD = "sua_senha"
-```
+No VS Code, abra `comercial-api/src/main/java/com/portfolio/comercial/ComercialApiApplication.java` e use **Run** acima do método `main` (ou a ação **Run Java**). Se essa ação não aparecer, instale as extensões Java/Spring do VS Code ou use a seção **Spring Boot Dashboard**. Com a aplicação iniciada, abra `http://localhost:8080/hello` no navegador.
 
-Na sequência, na pasta `comercial-api`, inicie a aplicação:
-
-```powershell
-cd comercial-api
-.\mvnw.cmd spring-boot:run
-```
+As variáveis de usuário ficam salvas no perfil do Windows e são herdadas por novos programas. Não compartilhe `PG_PASSWORD`, não a inclua em capturas de tela e não a salve em arquivos versionados.
 
 Com a aplicação iniciada, abra `http://localhost:8080/hello`. A resposta esperada é uma mensagem confirmando que a API está funcionando.
 
@@ -61,9 +57,7 @@ Com a aplicação iniciada, abra `http://localhost:8080/hello`. A resposta esper
 
 ## Próximos passos
 
-O próximo incremento recomendado é validar o mapeamento atualizado, registrar uma migração versionada e então implementar repositório e endpoints REST com validação. O roteiro completo está em [`docs/PLANO-DE-DESENVOLVIMENTO.md`](docs/PLANO-DE-DESENVOLVIMENTO.md). Para retomar o trabalho em outra sessão, comece por [`CONTEXTO.md`](CONTEXTO.md).
-
-Para aprender sobre cada arquivo de código ou configuração alterado, consulte o índice Word de [Ensinamentos](Ensinamentos/Indice.docx). As aulas atuais são [Produto.java](Ensinamentos/Produto.java.docx) e [application.properties](Ensinamentos/application.properties.docx).
+O próximo incremento recomendado é preparar a migration inicial e o baseline para o banco local já existente; depois, implementar repositório e endpoints REST com validação. A aplicação não deve ser iniciada até a migration e o baseline estarem prontos e revisados. O roteiro completo está em [`docs/PLANO-DE-DESENVOLVIMENTO.md`](docs/PLANO-DE-DESENVOLVIMENTO.md). Para retomar o trabalho em outra sessão, comece por [`CONTEXTO.md`](CONTEXTO.md). As explicações serão feitas passo a passo nesta conversa, e informarei sempre os arquivos que eu criar ou alterar para que você possa abri-los no VS Code.
 
 ## Portfólio e LinkedIn
 
