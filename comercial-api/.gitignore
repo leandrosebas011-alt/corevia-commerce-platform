@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Materiais locais de apoio
+/Ensinamentos/
+/prints
