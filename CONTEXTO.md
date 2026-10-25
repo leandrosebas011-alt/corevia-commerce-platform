@@ -30,8 +30,8 @@ O usuário quer aprender durante a construção do projeto. Trabalhe em etapas p
 - Restrições importantes: categoria tem `nome` único; cliente tem `email` único; produto tem `sku` único, preço e estoque não negativos; pedido tem `numero` único, `status` limitado a PENDENTE/PAGO/ENVIADO/ENTREGUE/CANCELADO e total não negativo; item tem uma linha por par pedido/produto, quantidade positiva, preço unitário não negativo e `subtotal` calculado pelo banco; movimentação tem `referencia` única, tipo ENTRADA/SAIDA e quantidade positiva. Clientes, produtos, pedidos e itens têm outros campos obrigatórios e defaults conforme o DDL fornecido.
 - O campo `subtotal` de `itens_pedido` é uma coluna gerada armazenada. `estoque_atual` não aparece como derivado das movimentações no DDL; atualizar o saldo ao registrar uma movimentação dependerá de lógica da aplicação ou de trigger ainda não identificado.
 - As FKs usam `ON DELETE NO ACTION`; registros referenciados não podem ser removidos enquanto houver dependentes. `OWNER`, `TABLESPACE` e collation padrão do PostgreSQL no script local são detalhes de ambiente, não devem ser copiados sem necessidade para uma migration portátil.
-- A migration deve criar tabelas numa ordem compatível com as FKs: `categorias`, `clientes`, `produtos`, `pedidos`, depois `itens_pedido` e `movimentacoes_estoque` (estas duas podem vir após suas dependências). O banco local já existe e contém essas tabelas; é preciso decidir estratégia de baseline para evitar recriá-las.
-- O `pom.xml` agora inclui `spring-boot-starter-flyway` e o módulo de banco `flyway-database-postgresql`. Ainda não há scripts de migration nem configuração de baseline. Não iniciar a aplicação até preparar e revisar esses itens, pois o Spring Boot executa as migrations durante a inicialização.
+- A migration deve criar tabelas numa ordem compatível com as FKs: `categorias`, `clientes`, `produtos`, `pedidos`, depois `itens_pedido` e `movimentacoes_estoque` (estas duas podem vir após suas dependências). Será usado somente o banco existente db_gestao_comercial; o baseline versão 1 evitará recriar as tabelas e futuras migrations começarão na versão 2.
+- O `pom.xml` inclui `spring-boot-starter-flyway` e o módulo `flyway-database-postgresql`. O script `comercial-api/src/main/resources/db/migration/V1__criar_estrutura_comercial.sql` descreve as seis tabelas existentes. O usuário tentou executá-lo manualmente no pgAdmin e recebeu PostgreSQL 42P07 porque `categorias` já existia; a criação falhou sem remover ou alterar a tabela. `application.properties` agora limita Flyway ao schema `portfolio_web`, impede criar schemas e configura baseline automático na versão 1. Na próxima inicialização, Flyway deverá registrar o baseline e pular V1; essa inicialização ainda não foi feita.
 - O mapeamento Java atual só tem a entidade `Produto`. Seus nomes/tipos básicos coincidem, mas não expressa todas as constraints do DDL e `categoriaId` ainda é um `Long` simples. Alinhar cada entidade e regra em etapas antes de criar os scripts.
 
 ## Última alteração no código
@@ -40,7 +40,7 @@ Após autorização do usuário, a entidade foi alinhada às colunas e tipos da 
 
 ## Atualização de documentação
 
-README e plano agora orientam configurar as variáveis PostgreSQL pela interface do Windows e iniciar a aplicação pelo VS Code. Referências às pastas removidas `Ensinamentos/` e `prints/` foram retiradas. O usuário confirmou que já testou a inicialização e a validação do mapeamento. O DDL completo das seis tabelas foi compartilhado; Flyway e o módulo PostgreSQL foram adicionados ao Maven. Próximo passo: criar e revisar a migration inicial e o baseline sem iniciar a aplicação.
+README e plano agora orientam configurar as variáveis PostgreSQL pela interface do Windows e iniciar a aplicação pelo VS Code. Referências às pastas removidas `Ensinamentos/` e `prints/` foram retiradas. O usuário confirmou que já testou a inicialização e a validação do mapeamento. O DDL completo das seis tabelas foi compartilhado; Flyway, módulo PostgreSQL, script V1 e configuração de baseline foram preparados para o único banco existente. Próximo passo: revisar a configuração e depois conferir o baseline na inicialização.
 
 ## Nota de aprendizado: identificador JPA
 
@@ -59,10 +59,10 @@ Exemplo conceitual: antes de salvar, o objeto está com `id == null`; após a in
 
 ## Próxima ação
 
-1. Explicar como migration e baseline funcionam e escolher a abordagem segura para o banco local já existente, sem alterar o banco.
-2. Criar e revisar o script inicial com as seis tabelas na ordem das dependências e configurar baseline.
-3. Alinhar o modelo Java e validações em passos pequenos, começando por Produto e Categoria.
-4. Depois de registrar a estrutura, implementar repository e operações da API de produtos.
+1. Revisar com o usuário o script inicial `V1__criar_estrutura_comercial.sql`; ele não deve ser executado manualmente no banco atual.
+2. Revisar os parâmetros de baseline em `application.properties` para confirmar que o alvo é o schema existente.
+3. Iniciar a aplicação pela interface do VS Code e conferir o registro baseline no histórico Flyway e a validação JPA.
+4. Alinhar o modelo Java e validações em passos pequenos, começando por Produto e Categoria; depois implementar repository e operações da API.
 
 ## Validações recentes
 

@@ -20,6 +20,7 @@ Projeto de portfólio para construir, passo a passo, uma plataforma web de gest�
 - Entidade JPA `Produto` mapeia as colunas `id`, `categoria_id`, `sku`, `nome`, `descricao`, `preco`, `estoque_atual` e `ativo` da tabela existente `portfolio_web.produtos`.
 - O banco local já possui tabelas para categorias, clientes, produtos, pedidos, itens de pedido e movimentações de estoque; as operações comerciais pela API ainda não foram implementadas.
 - Configuração para PostgreSQL por variáveis de ambiente.
+- O projeto usa somente o banco existente `db_gestao_comercial`. Flyway e o baseline versão 1 estão configurados para `portfolio_web`; o histórico ainda precisa ser registrado na próxima inicialização. V1 não deve recriar as tabelas existentes.
 - Teste de contexto gerado pelo Spring Boot, ainda sem validação do fluxo comercial.
 
 ## Funcionalidades planejadas
@@ -57,7 +58,7 @@ Com a aplicação iniciada, abra `http://localhost:8080/hello`. A resposta esper
 
 ## Próximos passos
 
-O próximo incremento recomendado é preparar a migration inicial e o baseline para o banco local já existente; depois, implementar repositório e endpoints REST com validação. A aplicação não deve ser iniciada até a migration e o baseline estarem prontos e revisados. O roteiro completo está em [`docs/PLANO-DE-DESENVOLVIMENTO.md`](docs/PLANO-DE-DESENVOLVIMENTO.md). Para retomar o trabalho em outra sessão, comece por [`CONTEXTO.md`](CONTEXTO.md). As explicações serão feitas passo a passo nesta conversa, e informarei sempre os arquivos que eu criar ou alterar para que você possa abri-los no VS Code.
+O próximo incremento recomendado é revisar a configuração e iniciar a aplicação para registrar a versão 1 no histórico do Flyway; futuras migrations começarão na versão 2. O roteiro completo está em [`docs/PLANO-DE-DESENVOLVIMENTO.md`](docs/PLANO-DE-DESENVOLVIMENTO.md). Para retomar o trabalho em outra sessão, comece por [`CONTEXTO.md`](CONTEXTO.md). As explicações serão feitas passo a passo nesta conversa, e informarei sempre os arquivos que eu criar ou alterar para que você possa abri-los no VS Code.
 
 ## Portfólio e LinkedIn
 

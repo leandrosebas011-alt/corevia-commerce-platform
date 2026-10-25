@@ -11,14 +11,14 @@ O projeto está sincronizado com `origin/main`. As pastas `Ensinamentos/` e `pri
 | Projeto Java | Maven com Spring Boot e Java 21 configurado no `pom.xml`. |
 | Inicialização | `ComercialApiApplication` inicia o Spring Boot. |
 | API | `HelloController` expõe `GET /hello`; o usuário iniciou a aplicação e confirmou que a rota respondeu. |
-| Banco | O banco local contém `categorias`, `clientes`, `produtos`, `pedidos`, `itens_pedido` e `movimentacoes_estoque`, com PKs, FKs, unicidades e checks documentados pelo DDL enviado pelo usuário. Flyway e o módulo PostgreSQL foram adicionados ao Maven; ainda faltam os scripts e a configuração de baseline. |
+| Banco | Será usado somente `db_gestao_comercial`, que já contém as seis tabelas com PKs, FKs, unicidades e checks. Flyway, V1 e a configuração de baseline versão 1 para `portfolio_web` foram adicionados; o histórico ainda não foi criado no banco. |
 | Produto | A entidade mapeia as colunas principais de `portfolio_web.produtos`, mas ainda não expressa todas as constraints; `categoria_id` segue como `Long`. CRUD ainda não existe. |
 | Banco | PostgreSQL está configurado por `PG_HOST`, `PG_PORT`, `PG_USER` e `PG_PASSWORD`; o banco esperado é `db_gestao_comercial`. |
 | Frontend | React é uma intenção no README, ainda não há aplicação frontend. |
 | Produto funcional | Clientes, estoque, pedidos, vendas, dashboard e autenticação ainda não foram implementados. |
 | Publicação | Não há evidência nos arquivos revisados de deploy, imagens, licença ou documentação de API. |
 
-O usuário confirmou que a aplicação iniciou e validou o mapeamento. Também compartilhou o DDL das seis tabelas. Flyway está no Maven, mas a aplicação não deve ser iniciada até os scripts e a estratégia de baseline estarem preparados e revisados, pois o Spring Boot executa migrations durante a inicialização.
+O usuário confirmou que a aplicação iniciou e validou o mapeamento. Também compartilhou o DDL das seis tabelas e confirmou que será usado somente o banco existente. Ele tentou executar V1 manualmente e PostgreSQL informou que `categorias` já existe. A configuração de baseline foi adicionada; na próxima inicialização, conferir o histórico Flyway e a validação JPA.
 
 ## Ordem recomendada
 
